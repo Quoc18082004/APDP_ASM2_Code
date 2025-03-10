@@ -6,7 +6,7 @@ namespace ASM_SIMS.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return View(); // View tu dong di chuyen vao package Views/Login/Index.cshtml
         }
     }
 }
