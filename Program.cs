@@ -1,3 +1,6 @@
+using ASM_SIMS.DB;
+using Microsoft.EntityFrameworkCore;
+
 namespace ASM_SIMS
 {
     public class Program
@@ -8,6 +11,14 @@ namespace ASM_SIMS
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // connect to database
+            var provider = builder.Services.BuildServiceProvider();
+            var configuration = provider.GetRequiredService<IConfiguration>();
+            builder.Services.AddDbContext<SimsDataContext>(item =>
+            {
+                item.UseSqlServer(configuration.GetConnectionString("connection"));
+            });
 
             var app = builder.Build();
 
@@ -28,7 +39,7 @@ namespace ASM_SIMS
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Login}/{action=Index}/{id?}"); // khi ch?y d? án thì s? ch?y login ??u tiên 
 
             app.Run();
         }

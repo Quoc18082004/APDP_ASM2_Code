@@ -1,0 +1,47 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <h2>This is Teacher Page</h2>
+        @* <p>Name: @ViewData["NameTeacher"]</p> *@
+        @* <p>Age: @ViewData["AgeTeacher"]</p> *@
+        @* <p>Address: @ViewData["AddressTeacher"]</p> *@
+        @* <p>Phone: @ViewData["PhoneTeacher"]</p> *@
+        @* <p>Email: @ViewData["EmailTeacher"]</p> *@
+        @* <p>Gender: @ViewData["GenderTeacher"]</p> *@
+        @* <hr /> *@
+        @* <p>Name: @Model.Name</p> *@
+        @* <p>Age: @Model.Age</p> *@
+        @* <p>Address: @Model.Address</p> *@
+
+
+
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Address</th>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Name</td>
+                        <td>@item.Age</td>
+                        <td>@item.Address</td>
+                    </tr>
+                }
+        </table>
+
+    </div>
+</div>
+
