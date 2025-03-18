@@ -17,6 +17,7 @@ namespace ASM_SIMS.DB
 
         [Column("Avatar", TypeName = "Varchar(150)"), AllowNull]
         public string? Avatar { get; set; }
+
         [Column("Status", TypeName = "Varchar(20)"), Required]
         public bool Status { get; set; }
 

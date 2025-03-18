@@ -8,6 +8,10 @@ namespace ASM_SIMS.DB
         {
         }
 
+        //Truyen vao DbSet de mapping voi bang trong database
+        // gen ra cac bang trong database
         public DbSet<Categories> Categories { get; set; }
+        public DbSet<Courses> Courses { get; set; }
+        public DbSet<Account> Account { get; set; }
     }
 }

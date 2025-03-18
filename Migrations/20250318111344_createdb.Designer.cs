@@ -4,6 +4,7 @@ using ASM_SIMS.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASM_SIMS.Migrations
 {
     [DbContext(typeof(SimsDataContext))]
-    partial class SimsDataContextModelSnapshot : ModelSnapshot
+    [Migration("20250318111344_createdb")]
+    partial class createdb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,7 +60,8 @@ namespace ASM_SIMS.Migrations
                         .HasColumnName("Phone");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("RoleId");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
