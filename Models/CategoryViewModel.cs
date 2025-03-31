@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using ASM_SIMS.Validations;
 
 namespace ASM_SIMS.Models
 {
@@ -20,8 +21,16 @@ namespace ASM_SIMS.Models
         [AllowNull]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Choose your Avatar")]
-        public IFormFile Avatar { get; set; }
 
+        [Required(ErrorMessage = "Choose your Avatar")]
+        [AllowedSizeFile(3*1024*1024)]
+        [AllowedTypeFile(new string[] { ".jpg", ".png", ".jpeg", ".gif" })]
+        public IFormFile? ViewAvatar { get; set; }
+
+        public string? Avartar { get; set; }
+
+        public string? Status { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

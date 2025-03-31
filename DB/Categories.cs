@@ -10,7 +10,7 @@ namespace ASM_SIMS.DB
         public int Id { get; set; }
 
         [Column("NameCategory", TypeName = "Varchar(60)"), Required]
-        public int NameCategory { get; set; }
+        public string NameCategory { get; set; }
 
         [Column("Description", TypeName = "Varchar(255)"), AllowNull]
         public string? Description { get; set; }
@@ -19,7 +19,7 @@ namespace ASM_SIMS.DB
         public string? Avatar { get; set; }
 
         [Column("Status", TypeName = "Varchar(20)"), Required]
-        public bool Status { get; set; }
+        public string Status { get; set; }
 
         [AllowNull]
         public DateTime? CreatedAt { get; set; }

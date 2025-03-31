@@ -19,4 +19,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\SIMS\uploads\images\" />
+    <Folder Include="wwwroot\SIMS\uploads\videos\" />
+  </ItemGroup>
+
 </Project>
