@@ -1,47 +1,61 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model List<ASM_SIMS.Models.TeacherViewModel>
 @{
+    ViewData["Title"] = "Teachers";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool statusSave = TempData["save"] != null && Convert.ToBoolean(TempData["save"]);
 }
 <div class="row">
     <div class="col-sm-12 col-md-12">
-        <h2>This is Teacher Page</h2>
-        @* <p>Name: @ViewData["NameTeacher"]</p> *@
-        @* <p>Age: @ViewData["AgeTeacher"]</p> *@
-        @* <p>Address: @ViewData["AddressTeacher"]</p> *@
-        @* <p>Phone: @ViewData["PhoneTeacher"]</p> *@
-        @* <p>Email: @ViewData["EmailTeacher"]</p> *@
-        @* <p>Gender: @ViewData["GenderTeacher"]</p> *@
-        @* <hr /> *@
-        @* <p>Name: @Model.Name</p> *@
-        @* <p>Age: @Model.Age</p> *@
-        @* <p>Address: @Model.Address</p> *@
+        <h2>Danh sách giảng viên</h2>
+        <a class="btn btn-primary" asp-action="Create">Thêm giảng viên</a>
 
+        @if (TempData["save"] != null)
+        {
+            if (statusSave)
+            {
+                <div class="text-success my-2">Thao tác thành công</div>
+            }
+            else
+            {
+                <div class="text-danger my-2">Thao tác thất bại</div>
+            }
+        }
 
-
-
-        <table class="table table-bordered">
+        <table class="table my-2">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Address</th>
+                    <th>ID</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Địa chỉ</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
             </thead>
-
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
                         <td>@item.Id</td>
-                        <td>@item.Name</td>
-                        <td>@item.Age</td>
+                        <td>@item.FullName</td>
+                        <td>@item.Email</td>
+                        <td>@item.Phone</td>
                         <td>@item.Address</td>
+                        <td>@item.Status</td>
+                        <td>
+                            <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Sửa</a>
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>
+                        </td>
                     </tr>
                 }
+            </tbody>
         </table>
-
     </div>
 </div>
 

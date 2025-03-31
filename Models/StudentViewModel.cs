@@ -2,20 +2,21 @@
 
 namespace ASM_SIMS.Models
 {
-    public class TeacherViewModel
+    public class StudentViewModel
     {
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Họ tên là bắt buộc")]
         public string FullName { get; set; }
 
         [Required(ErrorMessage = "Email là bắt buộc")]
-        [EmailAddress(ErrorMessage = "Email không hợp lệ")]
+        [EmailAddress(ErrorMessage = "Email invalid")]
         public string Email { get; set; }
-        public int Age { get; set; }
-        public string Address { get; set; }
 
-        [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
+        [Required(ErrorMessage = "Pls, Enter your Phone Number")]
         public string Phone { get; set; }
 
+        public string Address { get; set; }
         public string Status { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

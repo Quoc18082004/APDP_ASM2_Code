@@ -1,23 +1,74 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model List<ASM_SIMS.Models.CourseViewModel>
+@using ASM_SIMS.DB
 @{
+    ViewData["Title"] = "Courses";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool statusSave = TempData["save"] != null && Convert.ToBoolean(TempData["save"]);
+    var categories = ViewBag.Categories as List<Categories>; // Ép kiểu thành List<Categories>
 }
 <div class="row">
     <div class="col-sm-12 col-md-12">
-        <h2>This is Courses Page</h2>
+        <h2>Danh sách khóa học</h2>
+        <a class="btn btn-primary" asp-action="Create">Thêm khóa học</a>
+
+        @if (TempData["save"] != null)
+        {
+            if (statusSave)
+            {
+                <div class="text-success my-2">Thao tác thành công</div>
+            }
+            else
+            {
+                <div class="text-danger my-2">Thao tác thất bại</div>
+            }
+        }
+
+        <table class="table my-2">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên khóa học</th>
+                    <th>Mô tả</th>
+                    <th>Danh mục</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Ngày kết thúc</th>
+                    <th>Avatar</th>
+                    <th>Đánh giá</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var category = categories?.FirstOrDefault(c => c.Id == item.CategoryId);
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.NameCourse</td>
+                        <td>@item.Description</td>
+                        <td>@(category?.NameCategory ?? "N/A")</td>
+                        <td>@item.StartDate</td>
+                        <td>@item.EndDate</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.AvatarCourse))
+                            {
+                                <img src="~/SIMS/uploads/images/@item.AvatarCourse" alt="@item.NameCourse" width="100" />
+                            }
+                        </td>
+                        <td>@item.Vote</td>
+                        <td>@(item.Status ? "Active" : "Inactive")</td>
+                        <td>
+                            <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Sửa</a>
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-
-    <p>
-        Course: @ViewBag.NameCourse <br />
-        TimeCourse: @ViewBag.TimeCourse <br />
-        Price: @ViewBag.PriceCourse <br />
-        Name Teacher: @ViewBag.TeacherCourse <br />
-        Address: @ViewBag.AddressCourse <br />
-        Phone: @ViewBag.PhoneCourse <br />
-        Email: @ViewBag.EmailCourse <br />
-
-    </p>
 </div>
-
