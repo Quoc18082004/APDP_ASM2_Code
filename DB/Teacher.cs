@@ -8,8 +8,8 @@ namespace ASM_SIMS.DB
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("AccountId")]
-        public int AccountId { get; set; }
+        [ForeignKey("AccountId")] // Thêm dòng này
+        public int AccountId { get; set; } // Thêm dòng này
 
         [Column("FullName", TypeName = "Varchar(100)"), Required]
         public string FullName { get; set; }
@@ -26,10 +26,12 @@ namespace ASM_SIMS.DB
         [Column("Status", TypeName = "Varchar(20)"), Required]
         public string Status { get; set; }
 
-        public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         public Account Account { get; set; }
+        public Courses Course { get; set; }
+
     }
 }

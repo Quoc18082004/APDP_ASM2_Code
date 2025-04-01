@@ -5,6 +5,11 @@ namespace ASM_SIMS.Models
 {
     public class CourseViewModel
     {
+        public List<CourseDetail> courseList { get; set; }
+
+    }
+    public class CourseDetail
+    {
         public int Id { get; set; }
         [Required(ErrorMessage = "Tên khóa học là bắt buộc")]
         public string NameCourse { get; set; }

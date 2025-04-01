@@ -19,16 +19,49 @@ namespace ASM_SIMS.DB
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Cấu hình quan hệ một-một giữa Student/Teacher và Account
+            // Cấu hình quan hệ một-một giữa Student và Account
             modelBuilder.Entity<Student>()
                 .HasOne(s => s.Account)
                 .WithOne()
-                .HasForeignKey<Student>(s => s.AccountId);
-
+                .HasForeignKey<Student>(s => s.AccountId)
+                .OnDelete(DeleteBehavior.NoAction); // Tránh cascade
+                                                    // Cấu hình quan hệ một-một giữa Teacher và Account
             modelBuilder.Entity<Teacher>()
                 .HasOne(t => t.Account)
                 .WithOne()
-                .HasForeignKey<Teacher>(t => t.AccountId);
+                .HasForeignKey<Teacher>(t => t.AccountId)
+                .OnDelete(DeleteBehavior.NoAction); // Tránh cascade
+
+            // Cấu hình quan hệ một-nhiều giữa Courses và ClassRoom
+            modelBuilder.Entity<ClassRoom>()
+                .HasOne(c => c.Course)
+                .WithMany()
+                .HasForeignKey(c => c.CourseId)
+                .OnDelete(DeleteBehavior.NoAction); // Tránh cascade
+
+            // Cấu hình quan hệ một-nhiều giữa Teacher và ClassRoom
+            modelBuilder.Entity<ClassRoom>()
+                .HasOne(c => c.Teacher)
+                .WithMany()
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction); // Tránh cascade
+
+
+
+            // Cấu hình quan hệ một-nhiều giữa Categories và Courses
+            modelBuilder.Entity<Courses>()
+                .HasOne(c => c.Category) // Sửa từ 'CategoryId' thành 'Category'
+                .WithMany()
+                .HasForeignKey(c => c.CategoryId)
+                .OnDelete(DeleteBehavior.NoAction); // Tránh cascade
+
+            // Cấu hình quan hệ một-nhiều giữa ClassRoom và Student (nếu có)
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.ClassRoom)
+                .WithMany()
+                .HasForeignKey(s => s.ClassRoomId)
+                .OnDelete(DeleteBehavior.NoAction); // Tránh cascade
+
         }
     }
 }

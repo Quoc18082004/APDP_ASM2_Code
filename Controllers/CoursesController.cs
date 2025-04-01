@@ -7,160 +7,186 @@ namespace ASM_SIMS.Controllers
 {
     public class CoursesController : Controller
     {
-        private readonly SimsDataContext _dbContext;
+      
+        
+            private readonly SimsDataContext _dbContext;
 
-        public CoursesController(SimsDataContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+            public CoursesController(SimsDataContext dbContext)
+            {
+                _dbContext = dbContext;
+            }
 
-        public IActionResult Index()
-        {
-            var courses = _dbContext.Courses
-                .Where(c => c.DeletedAt == null)
-                .Select(c => new CourseViewModel
+            public IActionResult Index()
+            {
+                // Tạo list để hiển thị dữ liệu
+                CourseViewModel courseModel = new CourseViewModel();
+                courseModel.courseList = new List<CourseDetail>();
+                var data = from c in _dbContext.Courses
+                           where c.DeletedAt == null
+                           select c;
+                data.ToList();
+                foreach (var item in data)
                 {
-                    Id = c.Id,
-                    NameCourse = c.NameCourse,
-                    Description = c.Description,
-                    CategoryId = c.CategoryId,
-                    StartDate = c.StartDate,
-                    EndDate = c.EndDate,
-                    AvatarCourse = c.AvatarCourse,
-                    Vote = c.Vote,
-                    Status = c.Status,
-                    CreatedAt = c.CreatedAt,
-                    UpdatedAt = c.UpdatedAt
-                }).ToList();
+                    courseModel.courseList.Add(new CourseDetail
+                    {
+                        Id = item.Id,
+                        NameCourse = item.NameCourse,
+                        Description = item.Description,
+                        CategoryId = item.CategoryId,
+                        StartDate = item.StartDate,
+                        EndDate = item.EndDate,
+                        AvatarCourse = item.AvatarCourse,
+                        Vote = item.Vote,
+                        Status = item.Status,
+                        CreatedAt = item.CreatedAt,
+                        UpdatedAt = item.UpdatedAt
 
-            ViewData["Title"] = "Courses";
-            return View(courses);
-        }
+                    });
+                }
+                ViewData["title"] = "Courses";
+                return View(courseModel);
+            }
 
-        [HttpGet]
-        public IActionResult Create()
-        {
-            ViewBag.Categories = _dbContext.Categories.ToList();
-            return View(new CourseViewModel());
-        }
+            [HttpGet]
+            public IActionResult Create()
+            {
+                ViewBag.Categories = _dbContext.Categories.ToList();
+                return View(new CourseDetail());
+            }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(CourseViewModel model)
-        {
-            if (ModelState.IsValid)
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> Create(CourseDetail model, IFormFile ViewAvatar)
+            {
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        string fileAvatar = null;
+                        if (ViewAvatar != null)
+                        {
+                            UploadFile uploadFile = new UploadFile(ViewAvatar);
+                            fileAvatar = uploadFile.Upload("images");
+                        }
+
+                        var course = new Courses
+                        {
+                            NameCourse = model.NameCourse,
+                            Description = model.Description,
+                            CategoryId = model.CategoryId,
+                            StartDate = model.StartDate,
+                            EndDate = model.EndDate,
+                            AvatarCourse = fileAvatar,
+                            Vote = model.Vote,
+                            Status = true,
+                            CreatedAt = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
+                            DeletedAt = null
+                        };
+                        _dbContext.Courses.Add(course);
+                        _dbContext.SaveChanges();
+                        TempData["save"] = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        TempData["save"] = false;
+                        return Ok(ex.Message.ToString());
+                    }
+                    return RedirectToAction("Index", "Courses");
+                }
+                ViewBag.Categories = _dbContext.Categories.ToList();
+                return View(model);
+            }
+
+            [HttpGet]
+            public IActionResult Edit(int id)
+            {
+                var course = _dbContext.Courses.Find(id);
+                if (course == null || course.DeletedAt != null) return NotFound();
+
+                var model = new CourseDetail
+                {
+                    Id = course.Id,
+                    NameCourse = course.NameCourse,
+                    Description = course.Description,
+                    CategoryId = course.CategoryId,
+                    StartDate = course.StartDate,
+                    EndDate = course.EndDate,
+                    AvatarCourse = course.AvatarCourse,
+                    Vote = course.Vote,
+                    Status = course.Status,
+                    CreatedAt = course.CreatedAt,
+                    UpdatedAt = course.UpdatedAt
+
+                };
+                ViewBag.Categories = _dbContext.Categories.ToList();
+                return View(model);
+            }
+
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> Edit(CourseDetail model, IFormFile ViewAvatar)
+            {
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        var course = _dbContext.Courses.Find(model.Id);
+                        if (course == null || course.DeletedAt != null) return NotFound();
+
+                        if (ViewAvatar != null)
+                        {
+                            var uploadFile = new UploadFile(ViewAvatar);
+                            course.AvatarCourse = uploadFile.Upload("images");
+                        }
+
+                        course.NameCourse = model.NameCourse;
+                        course.Description = model.Description;
+                        course.CategoryId = model.CategoryId;
+                        course.StartDate = model.StartDate;
+                        course.EndDate = model.EndDate;
+                        course.Vote = model.Vote;
+                        course.Status = model.Status;
+                        course.UpdatedAt = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+                        _dbContext.Courses.Update(course);
+                        _dbContext.SaveChanges();
+                        TempData["save"] = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        TempData["save"] = false;
+                        return Ok(ex.Message.ToString());
+                    }
+                    return RedirectToAction("Index", "Courses");
+                }
+                ViewBag.Categories = _dbContext.Categories.ToList();
+                return View(model);
+            }
+
+
+            [HttpGet]
+            public async Task<IActionResult> Delete(int id)
             {
                 try
                 {
-                    string fileAvatar = null;
-                    if (model.AvatarCourseFile != null)
+                    var course = _dbContext.Courses.FirstOrDefault(c => c.Id == id);
+                    if (course == null)
                     {
-                        var uploadFile = new UploadFile(model.AvatarCourseFile); // SRP: UploadFile chỉ chịu trách nhiệm upload file
-                        fileAvatar = uploadFile.Upload("images");
+                        return NotFound();
                     }
 
-                    var course = new Courses
-                    {
-                        NameCourse = model.NameCourse,
-                        Description = model.Description,
-                        CategoryId = model.CategoryId,
-                        StartDate = model.StartDate,
-                        EndDate = model.EndDate,
-                        AvatarCourse = fileAvatar,
-                        Vote = model.Vote,
-                        Status = true,
-                        CreatedAt = DateTime.Now
-                    };
-                    _dbContext.Courses.Add(course);
-                    _dbContext.SaveChanges();
+                    _dbContext.Courses.Remove(course);
+                    await _dbContext.SaveChangesAsync();
                     TempData["save"] = true;
-                    return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
                     TempData["save"] = false;
-                    ModelState.AddModelError("", $"Lỗi: {ex.Message}");
+                    TempData["error"] = $"Failed to delete course: {ex.Message}";
                 }
+                return RedirectToAction("Index");
             }
-            ViewBag.Categories = _dbContext.Categories.ToList();
-            return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult Edit(int id)
-        {
-            var course = _dbContext.Courses.Find(id);
-            if (course == null || course.DeletedAt != null) return NotFound();
-
-            var model = new CourseViewModel
-            {
-                Id = course.Id,
-                NameCourse = course.NameCourse,
-                Description = course.Description,
-                CategoryId = course.CategoryId,
-                StartDate = course.StartDate,
-                EndDate = course.EndDate,
-                AvatarCourse = course.AvatarCourse,
-                Vote = course.Vote,
-                Status = course.Status
-            };
-            ViewBag.Categories = _dbContext.Categories.ToList();
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(CourseViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var course = _dbContext.Courses.Find(model.Id);
-                    if (course == null || course.DeletedAt != null) return NotFound();
-
-                    if (model.AvatarCourseFile != null)
-                    {
-                        var uploadFile = new UploadFile(model.AvatarCourseFile);
-                        course.AvatarCourse = uploadFile.Upload("images");
-                    }
-
-                    course.NameCourse = model.NameCourse;
-                    course.Description = model.Description;
-                    course.CategoryId = model.CategoryId;
-                    course.StartDate = model.StartDate;
-                    course.EndDate = model.EndDate;
-                    course.Vote = model.Vote;
-                    course.Status = model.Status;
-                    course.UpdatedAt = DateTime.Now;
-
-                    _dbContext.Courses.Update(course);
-                    _dbContext.SaveChanges();
-                    TempData["save"] = true;
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    TempData["save"] = false;
-                    ModelState.AddModelError("", $"Lỗi: {ex.Message}");
-                }
-            }
-            ViewBag.Categories = _dbContext.Categories.ToList();
-            return View(model);
-        }
-
-        [HttpPost]
-        public IActionResult Delete(int id)
-        {
-            var course = _dbContext.Courses.Find(id);
-            if (course == null || course.DeletedAt != null) return NotFound();
-
-            course.DeletedAt = DateTime.Now;
-            course.Status = false;
-            _dbContext.Courses.Update(course);
-            _dbContext.SaveChanges();
-            return RedirectToAction(nameof(Index));
-        }
+        
     }
 }
 

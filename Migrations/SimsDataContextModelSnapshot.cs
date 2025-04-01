@@ -134,8 +134,11 @@ namespace ASM_SIMS.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date")
+                        .HasColumnName("EndDate");
+
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("Varchar(100)")
                         .HasColumnName("Location");
 
@@ -143,6 +146,10 @@ namespace ASM_SIMS.Migrations
                         .IsRequired()
                         .HasColumnType("Varchar(100)")
                         .HasColumnName("Schedule");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date")
+                        .HasColumnName("StartDate");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -216,6 +223,8 @@ namespace ASM_SIMS.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Courses");
                 });
 
@@ -234,6 +243,12 @@ namespace ASM_SIMS.Migrations
                         .IsRequired()
                         .HasColumnType("Varchar(150)")
                         .HasColumnName("Address");
+
+                    b.Property<int?>("ClassRoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CourseId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -268,6 +283,10 @@ namespace ASM_SIMS.Migrations
 
                     b.HasIndex("AccountId")
                         .IsUnique();
+
+                    b.HasIndex("ClassRoomId");
+
+                    b.HasIndex("CourseId");
 
                     b.ToTable("Students");
                 });
@@ -288,6 +307,9 @@ namespace ASM_SIMS.Migrations
                         .HasColumnType("Varchar(150)")
                         .HasColumnName("Address");
 
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -322,6 +344,8 @@ namespace ASM_SIMS.Migrations
                     b.HasIndex("AccountId")
                         .IsUnique();
 
+                    b.HasIndex("CourseId");
+
                     b.ToTable("Teachers");
                 });
 
@@ -330,13 +354,13 @@ namespace ASM_SIMS.Migrations
                     b.HasOne("ASM_SIMS.DB.Courses", "Course")
                         .WithMany()
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ASM_SIMS.DB.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -344,15 +368,39 @@ namespace ASM_SIMS.Migrations
                     b.Navigation("Teacher");
                 });
 
+            modelBuilder.Entity("ASM_SIMS.DB.Courses", b =>
+                {
+                    b.HasOne("ASM_SIMS.DB.Categories", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("ASM_SIMS.DB.Student", b =>
                 {
                     b.HasOne("ASM_SIMS.DB.Account", "Account")
                         .WithOne()
                         .HasForeignKey("ASM_SIMS.DB.Student", "AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("ASM_SIMS.DB.ClassRoom", "ClassRoom")
+                        .WithMany()
+                        .HasForeignKey("ClassRoomId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("ASM_SIMS.DB.Courses", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId");
+
                     b.Navigation("Account");
+
+                    b.Navigation("ClassRoom");
+
+                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("ASM_SIMS.DB.Teacher", b =>
@@ -360,10 +408,18 @@ namespace ASM_SIMS.Migrations
                     b.HasOne("ASM_SIMS.DB.Account", "Account")
                         .WithOne()
                         .HasForeignKey("ASM_SIMS.DB.Teacher", "AccountId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ASM_SIMS.DB.Courses", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");
+
+                    b.Navigation("Course");
                 });
 #pragma warning restore 612, 618
         }

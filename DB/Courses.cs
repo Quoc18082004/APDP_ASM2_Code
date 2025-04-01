@@ -6,6 +6,9 @@ namespace ASM_SIMS.DB
 {
     public class Courses
     {
+
+        [AllowNull]
+        public DateTime? CreatedAt { get; set; }
         [Key]
         public int Id { get; set; }
 
@@ -33,16 +36,13 @@ namespace ASM_SIMS.DB
         [Column("Status", TypeName = "Varchar(20)"), Required]
         public bool Status { get; set; }
 
-
-
-        [AllowNull]
-        public DateTime? CreatedAt { get; set; }
-
         [AllowNull]
         public DateTime? UpdatedAt { get; set; }
 
         [AllowNull]
         public DateTime? DeletedAt { get; set; }
+        // Thuộc tính điều hướng cần có
+        public Categories Category { get; set; } // Đảm bảo có dòng này
 
     }
 }
