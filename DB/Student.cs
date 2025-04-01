@@ -1,22 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ASM_SIMS.DB
 {
     public class Student
     {
-
         [Key]
         public int Id { get; set; }
 
         [ForeignKey("AccountId")]
         public int AccountId { get; set; }
 
-        [ForeignKey("ClassRoomId")] // Thêm khóa ngoại cho ClassRoom
-        public int? ClassRoomId { get; set; } // Nullable vì một học sinh có thể chưa thuộc lớp nào
+        [ForeignKey("ClassRoomId")]
+        public int? ClassRoomId { get; set; } // Nullable vì sinh viên có thể chưa thuộc lớp nào
 
-        [ForeignKey("CourseId")] // Thêm khóa ngoại cho Courses
-        public int? CourseId { get; set; } // Nullable vì một học sinh có thể chưa đăng ký khóa học
+        [ForeignKey("CourseId")]
+        public int? CourseId { get; set; } // Nullable vì sinh viên có thể chưa đăng ký khóa học
 
         [Column("FullName", TypeName = "Varchar(100)"), Required]
         public string FullName { get; set; }
@@ -37,7 +36,6 @@ namespace ASM_SIMS.DB
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
 
-        // Quan hệ điều hướng
         public Account Account { get; set; }
         public ClassRoom ClassRoom { get; set; }
         public Courses Course { get; set; }

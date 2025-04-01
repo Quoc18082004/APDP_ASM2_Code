@@ -1,15 +1,13 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model List<ASM_SIMS.Models.ClassRoomViewModel>
+﻿@model List<ASM_SIMS.Models.ClassRoomViewModel>
 @using ASM_SIMS.DB
 @{
     ViewData["Title"] = "Class Rooms";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     bool statusSave = TempData["save"] != null && Convert.ToBoolean(TempData["save"]);
-    var courses = ViewBag.Courses as List<Courses>; // Ép kiểu thành List<Courses>
-    var teachers = ViewBag.Teachers as List<Teacher>; // Ép kiểu thành List<Teacher>
+    var courses = ViewBag.Courses as List<Courses>;
+    var teachers = ViewBag.Teachers as List<Teacher>;
 }
+
 <div class="row">
     <div class="col-sm-12 col-md-12">
         <h2>Danh sách lớp học</h2>
@@ -27,6 +25,11 @@
             }
         }
 
+        @if (!Model.Any())
+        {
+            <p class="text-info my-2">Chưa có lớp học nào.</p>
+        }
+
         <table class="table my-2">
             <thead>
                 <tr>
@@ -34,7 +37,9 @@
                     <th>Tên lớp</th>
                     <th>Khóa học</th>
                     <th>Giảng viên</th>
-                    <th>Lịch học</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Ngày kết thúc</th>
+                    <th>Lịch học</th> 
                     <th>Địa điểm</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
@@ -50,7 +55,9 @@
                         <td>@item.ClassName</td>
                         <td>@(course?.NameCourse ?? "N/A")</td>
                         <td>@(teacher?.FullName ?? "N/A")</td>
-                        <td>@item.Schedule</td>
+                        <td>@item.StartDate</td>
+                        <td>@item.EndDate</td>
+                        <td>@item.Schedule</td> 
                         <td>@item.Location</td>
                         <td>@item.Status</td>
                         <td>

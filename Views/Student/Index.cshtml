@@ -1,12 +1,13 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model List<ASM_SIMS.Models.StudentViewModel>
+﻿@model List<ASM_SIMS.Models.StudentViewModel>
+@using ASM_SIMS.DB
 @{
     ViewData["Title"] = "Students";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     bool statusSave = TempData["save"] != null && Convert.ToBoolean(TempData["save"]);
+    var classRooms = ViewBag.ClassRooms as List<ClassRoom>;
+    var courses = ViewBag.Courses as List<Courses>;
 }
+
 <div class="row">
     <div class="col-sm-12 col-md-12">
         <h2>Danh sách sinh viên</h2>
@@ -32,6 +33,8 @@
                     <th>Email</th>
                     <th>Số điện thoại</th>
                     <th>Địa chỉ</th>
+                    <th>Lớp học</th>
+                    <th>Khóa học</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
                 </tr>
@@ -39,16 +42,20 @@
             <tbody>
                 @foreach (var item in Model)
                 {
+                    var classRoom = classRooms?.FirstOrDefault(c => c.Id == item.ClassRoomId);
+                    var course = courses?.FirstOrDefault(c => c.Id == item.CourseId);
                     <tr>
                         <td>@item.Id</td>
                         <td>@item.FullName</td>
                         <td>@item.Email</td>
                         <td>@item.Phone</td>
                         <td>@item.Address</td>
+                        <td>@(classRoom?.ClassName ?? "Chưa gán")</td>
+                        <td>@(course?.NameCourse ?? "Chưa gán")</td>
                         <td>@item.Status</td>
                         <td>
                             <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Sửa</a>
-                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên này?');">
                                 <button type="submit" class="btn btn-danger">Xóa</button>
                             </form>
                         </td>

@@ -11,6 +11,9 @@ namespace ASM_SIMS.DB
         [ForeignKey("AccountId")] // Thêm dòng này
         public int AccountId { get; set; } // Thêm dòng này
 
+        [ForeignKey("CourseId")] // Thêm khóa ngoại rõ ràng
+        public int? CourseId { get; set; } // Cho phép null nếu không bắt buộc
+
         [Column("FullName", TypeName = "Varchar(100)"), Required]
         public string FullName { get; set; }
 

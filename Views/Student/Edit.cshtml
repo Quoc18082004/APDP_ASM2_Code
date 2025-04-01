@@ -1,7 +1,7 @@
 ﻿@model ASM_SIMS.Models.StudentViewModel
 @using ASM_SIMS.DB
 @{
-    ViewData["Title"] = "Create Student";
+    ViewData["Title"] = "Edit Student";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     var classRooms = ViewBag.ClassRooms as List<ClassRoom>;
     var courses = ViewBag.Courses as List<Courses>;
@@ -9,12 +9,12 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-12">
-        <h2>Thêm sinh viên</h2>
+        <h2>Sửa sinh viên</h2>
         <a class="btn btn-info" asp-action="Index">Quay lại</a>
         <div class="card mt-3">
             <div class="card-body">
-                <form method="post" asp-action="Create">
-                    <!-- Hiển thị thông báo lỗi nếu có -->
+                <form method="post" asp-action="Edit">
+                    <input type="hidden" asp-for="Id" />
                     @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()) || (TempData["save"] != null && !(bool)TempData["save"]))
                     {
                         <div class="text-danger">
@@ -31,7 +31,6 @@
                             }
                         </div>
                     }
-
                     <div class="mb-3">
                         <label asp-for="FullName">Họ tên</label>
                         <input asp-for="FullName" class="form-control" />
@@ -54,14 +53,14 @@
                     </div>
                     <div class="mb-3">
                         <label asp-for="ClassRoomId">Lớp học</label>
-                        <select asp-for="ClassRoomId" class="form-control" asp-items="@(new SelectList(classRooms, "Id", "ClassName"))">
+                        <select asp-for="ClassRoomId" class="form-control" asp-items="@(new SelectList(classRooms, "Id", "ClassName", Model.ClassRoomId))">
                             <option value="">-- Chọn lớp học --</option>
                         </select>
                         <span asp-validation-for="ClassRoomId" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="CourseId">Khóa học</label>
-                        <select asp-for="CourseId" class="form-control" asp-items="@(new SelectList(courses, "Id", "NameCourse"))">
+                        <select asp-for="CourseId" class="form-control" asp-items="@(new SelectList(courses, "Id", "NameCourse", Model.CourseId))">
                             <option value="">-- Chọn khóa học --</option>
                         </select>
                         <span asp-validation-for="CourseId" class="text-danger"></span>

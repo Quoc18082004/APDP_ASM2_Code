@@ -10,14 +10,23 @@ namespace ASM_SIMS.Models
         public string FullName { get; set; }
 
         [Required(ErrorMessage = "Email là bắt buộc")]
-        [EmailAddress(ErrorMessage = "Email invalid")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Pls, Enter your Phone Number")]
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
         public string Phone { get; set; }
 
         public string Address { get; set; }
+
+        public int? AccountId { get; set; }
+
+        public int? ClassRoomId { get; set; }
+
+        public int? CourseId { get; set; }
+
+        [Required(ErrorMessage = "Trạng thái là bắt buộc")]
         public string Status { get; set; }
+
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

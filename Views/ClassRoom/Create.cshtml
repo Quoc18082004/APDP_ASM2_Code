@@ -1,0 +1,93 @@
+﻿@model ASM_SIMS.Models.ClassRoomViewModel
+@using ASM_SIMS.DB
+@{
+    ViewData["Title"] = "Create Class Room";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    var courses = ViewBag.Courses as List<Courses>;
+    var teachers = ViewBag.Teachers as List<Teacher>;
+}
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <h2>Thêm lớp học</h2>
+        <a class="btn btn-info" href="@Url.Action("Index", "ClassRoom")">Quay lại danh sách lớp học</a>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Thêm lớp học</h5>
+                <div class="mb-3">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="text-danger">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <p>@error.ErrorMessage</p>
+                            }
+                        </div>
+                    }
+                </div>
+                <form method="post" asp-controller="ClassRoom" asp-action="Create">
+                    <div class="mb-3">
+                        <label asp-for="ClassName">Tên lớp</label>
+                        <input asp-for="ClassName" class="form-control" type="text" />
+                        <span asp-validation-for="ClassName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="CourseId">Khóa học</label>
+                        <select asp-for="CourseId" class="form-control" asp-items="@(new SelectList(courses, "Id", "NameCourse"))">
+                            <option value="">Chọn khóa học</option>
+                        </select>
+                        <span asp-validation-for="CourseId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TeacherId">Giảng viên</label>
+                        <select asp-for="TeacherId" class="form-control" asp-items="@(new SelectList(teachers, "Id", "FullName"))">
+                            <option value="">Chọn giảng viên</option>
+                        </select>
+                        <span asp-validation-for="TeacherId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="StartDate">Ngày bắt đầu</label>
+                        <input asp-for="StartDate" class="form-control" type="date" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="EndDate">Ngày kết thúc</label>
+                        <input asp-for="EndDate" class="form-control" type="date" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Schedule">Lịch học</label>
+                        <input asp-for="Schedule" class="form-control" type="text" placeholder="Ví dụ: Thứ 2, 8:00-10:00" />
+                        <span asp-validation-for="Schedule" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Location">Địa điểm</label>
+                        <input asp-for="Location" class="form-control" type="text" />
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Status">Trạng thái</label>
+                        <select asp-for="Status" class="form-control">
+                            <option value="">Chọn trạng thái</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Thêm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -9,18 +9,18 @@
 }
 <div class="row">
     <div class="col-sm-12 col-md-12">
-        <h2>Danh sách giảng viên</h2>
-        <a class="btn btn-primary" asp-action="Create">Thêm giảng viên</a>
+        <h2>List Teachers</h2>
+        <a class="btn btn-primary" asp-action="Create">Add Teacher</a>
 
         @if (TempData["save"] != null)
         {
             if (statusSave)
             {
-                <div class="text-success my-2">Thao tác thành công</div>
+                <div class="text-success my-2">Operation successful</div>
             }
             else
             {
-                <div class="text-danger my-2">Thao tác thất bại</div>
+                <div class="text-danger my-2">Operation Fail</div>
             }
         }
 
@@ -28,12 +28,12 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Họ tên</th>
+                    <th>Full Name</th>
                     <th>Email</th>
-                    <th>Số điện thoại</th>
-                    <th>Địa chỉ</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
+                    <th>Full Number</th>
+                    <th>Address</th>
+                    <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,9 +47,9 @@
                         <td>@item.Address</td>
                         <td>@item.Status</td>
                         <td>
-                            <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Sửa</a>
+                            <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                             <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-danger">Xóa</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </td>
                     </tr>

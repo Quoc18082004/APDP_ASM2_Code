@@ -9,11 +9,13 @@ namespace ASM_SIMS.Controllers
     {
         private readonly SimsDataContext _dbContext;
 
+        // DIP (Dependency Inversion Principle): Phụ thuộc vào abstraction (SimsDataContext)
         public ClassRoomController(SimsDataContext dbContext)
         {
-            _dbContext = dbContext;
+            _dbContext = dbContext; // Clean Code: Tên biến rõ ràng
         }
 
+        // Hiển thị danh sách lớp học
         public IActionResult Index()
         {
             var classRooms = _dbContext.ClassRooms
@@ -26,25 +28,40 @@ namespace ASM_SIMS.Controllers
                     ClassName = c.ClassName,
                     CourseId = c.CourseId,
                     TeacherId = c.TeacherId,
-                    Schedule = c.Schedule,
+                    StartDate = c.StartDate,
+                    EndDate = c.EndDate,
+                    Schedule = c.Schedule, 
                     Location = c.Location,
                     Status = c.Status,
                     CreatedAt = c.CreatedAt,
                     UpdatedAt = c.UpdatedAt
                 }).ToList();
 
+            // Gán ViewBag.Courses và ViewBag.Teachers
+            ViewBag.Courses = _dbContext.Courses
+                .Where(c => c.DeletedAt == null)
+                .ToList();
+            ViewBag.Teachers = _dbContext.Teachers
+                .Where(t => t.DeletedAt == null)
+                .ToList();
+
             ViewData["Title"] = "Class Rooms";
             return View(classRooms);
         }
-
+        // GET: Hiển thị form tạo mới lớp học
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.Courses = _dbContext.Courses.ToList();
-            ViewBag.Teachers = _dbContext.Teachers.ToList();
+            ViewBag.Courses = _dbContext.Courses
+                .Where(c => c.DeletedAt == null)
+                .ToList();
+            ViewBag.Teachers = _dbContext.Teachers
+                .Where(t => t.DeletedAt == null)
+                .ToList();
             return View(new ClassRoomViewModel());
         }
 
+        // POST: Xử lý thêm mới lớp học
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(ClassRoomViewModel model)
@@ -58,7 +75,9 @@ namespace ASM_SIMS.Controllers
                         ClassName = model.ClassName,
                         CourseId = model.CourseId,
                         TeacherId = model.TeacherId,
-                        Schedule = model.Schedule,
+                        StartDate = model.StartDate,
+                        EndDate = model.EndDate,
+                        Schedule = model.Schedule, 
                         Location = model.Location,
                         Status = "Active",
                         CreatedAt = DateTime.Now
@@ -72,13 +91,25 @@ namespace ASM_SIMS.Controllers
                 {
                     TempData["save"] = false;
                     ModelState.AddModelError("", $"Lỗi: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}"); 
                 }
             }
-            ViewBag.Courses = _dbContext.Courses.ToList();
-            ViewBag.Teachers = _dbContext.Teachers.ToList();
+            else
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                ModelState.AddModelError("", "Validation errors: " + string.Join(", ", errors));
+                System.Diagnostics.Debug.WriteLine("Validation errors: " + string.Join(", ", errors)); 
+            }
+            ViewBag.Courses = _dbContext.Courses
+                .Where(c => c.DeletedAt == null)
+                .ToList();
+            ViewBag.Teachers = _dbContext.Teachers
+                .Where(t => t.DeletedAt == null)
+                .ToList();
             return View(model);
         }
 
+        // GET: Hiển thị form chỉnh sửa lớp học
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -91,7 +122,8 @@ namespace ASM_SIMS.Controllers
                 ClassName = classRoom.ClassName,
                 CourseId = classRoom.CourseId,
                 TeacherId = classRoom.TeacherId,
-                Schedule = classRoom.Schedule,
+                StartDate = classRoom.StartDate, 
+                EndDate = classRoom.EndDate,     
                 Location = classRoom.Location,
                 Status = classRoom.Status
             };
@@ -100,6 +132,7 @@ namespace ASM_SIMS.Controllers
             return View(model);
         }
 
+        // POST: Xử lý chỉnh sửa lớp học
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(ClassRoomViewModel model)
@@ -108,18 +141,24 @@ namespace ASM_SIMS.Controllers
             {
                 try
                 {
-                    var classRoom = _dbContext.ClassRooms.Find(model.Id);
-                    if (classRoom == null || classRoom.DeletedAt != null) return NotFound();
+                    var classRoom = _dbContext.ClassRooms.FirstOrDefault(c => c.Id == model.Id);
+                    if (classRoom == null)
+                    {
+                        TempData["save"] = false;
+                        return RedirectToAction(nameof(Index));
+                    }
 
+                    // Cập nhật các trường
                     classRoom.ClassName = model.ClassName;
                     classRoom.CourseId = model.CourseId;
                     classRoom.TeacherId = model.TeacherId;
+                    classRoom.StartDate = model.StartDate;
+                    classRoom.EndDate = model.EndDate;
                     classRoom.Schedule = model.Schedule;
                     classRoom.Location = model.Location;
                     classRoom.Status = model.Status;
                     classRoom.UpdatedAt = DateTime.Now;
 
-                    _dbContext.ClassRooms.Update(classRoom);
                     _dbContext.SaveChanges();
                     TempData["save"] = true;
                     return RedirectToAction(nameof(Index));
@@ -128,26 +167,49 @@ namespace ASM_SIMS.Controllers
                 {
                     TempData["save"] = false;
                     ModelState.AddModelError("", $"Lỗi: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
                 }
             }
-            ViewBag.Courses = _dbContext.Courses.ToList();
-            ViewBag.Teachers = _dbContext.Teachers.ToList();
+            else
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                ModelState.AddModelError("", "Validation errors: " + string.Join(", ", errors));
+                System.Diagnostics.Debug.WriteLine("Validation errors: " + string.Join(", ", errors));
+            }
+
+            ViewBag.Courses = _dbContext.Courses
+                .Where(c => c.DeletedAt == null)
+                .ToList();
+            ViewBag.Teachers = _dbContext.Teachers
+                .Where(t => t.DeletedAt == null)
+                .ToList();
             return View(model);
         }
-
+        // POST: Xử lý xóa lớp học
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            var classRoom = _dbContext.ClassRooms.Find(id);
-            if (classRoom == null || classRoom.DeletedAt != null) return NotFound();
+            try
+            {
+                var classRoom = _dbContext.ClassRooms.FirstOrDefault(c => c.Id == id);
+                if (classRoom == null)
+                {
+                    TempData["save"] = false;
+                    return RedirectToAction(nameof(Index));
+                }
 
-            classRoom.DeletedAt = DateTime.Now;
-            classRoom.Status = "Deleted";
-            _dbContext.ClassRooms.Update(classRoom);
-            _dbContext.SaveChanges();
+                _dbContext.ClassRooms.Remove(classRoom); 
+                _dbContext.SaveChanges();
+                TempData["save"] = true;
+            }
+            catch (Exception ex)
+            {
+                TempData["save"] = false;
+                System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
+            }
             return RedirectToAction(nameof(Index));
         }
-
-
     }
+    
 }
