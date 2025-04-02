@@ -19,6 +19,13 @@ namespace ASM_SIMS.Controllers
         // Hiển thị danh sách giảng viên
         public IActionResult Index()
         {
+
+            // kiem tra session
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
             var teachers = _dbContext.Teachers
                 .Where(t => t.DeletedAt == null)
                 .Include(t => t.Account) // Include Account để lấy thông tin tài khoản nếu cần

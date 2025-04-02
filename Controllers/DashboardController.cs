@@ -6,8 +6,13 @@ namespace ASM_SIMS.Controllers
     {
         public IActionResult Index()
         {
+            // kiem tra session
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
+            {
+                return RedirectToAction("Index", "Login");
+            }
 
-            ViewData["Title"] = "Dashboard";// Nhận dữ liệu từ Model và truyền nó cho View
+            ViewData["Title"] = "Dashboard - Hi There!";
 
             return View();
         }

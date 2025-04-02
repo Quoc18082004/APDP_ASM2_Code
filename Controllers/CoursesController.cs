@@ -18,8 +18,14 @@ namespace ASM_SIMS.Controllers
 
             public IActionResult Index()
             {
-                // Tạo list để hiển thị dữ liệu
-                CourseViewModel courseModel = new CourseViewModel();
+
+            // kiem tra session
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            // Tạo list để hiển thị dữ liệu
+            CourseViewModel courseModel = new CourseViewModel();
                 courseModel.courseList = new List<CourseDetail>();
                 var data = from c in _dbContext.Courses
                            where c.DeletedAt == null

@@ -18,6 +18,13 @@ namespace ASM_SIMS.Controllers
         // Hiển thị danh sách lớp học
         public IActionResult Index()
         {
+
+            // kiem tra session
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
             var classRooms = _dbContext.ClassRooms
                 .Where(c => c.DeletedAt == null)
                 .Include(c => c.Course)
