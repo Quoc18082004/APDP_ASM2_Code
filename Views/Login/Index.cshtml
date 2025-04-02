@@ -6,8 +6,8 @@
     Layout = "~/Views/Shared/_LayoutSignInSignUp.cshtml";
 }
 
-<div class="d-table-cell align-middle">
-    <div class="text-center mt-4">
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="col-md-6 col-lg-5">
         <h1 class="h2">Welcome back!</h1>
         <p class="lead">Sign in to your account to continue</p>
         @if (ViewData["MessageLogin"] != null)
@@ -33,9 +33,7 @@
                     <div class="d-grid gap-2 mt-3">
                         <button type="submit" class="btn btn-lg btn-primary">Sign in</button>
                     </div>
-                    <div class="text-center mt-3">
-                        <p>Don't have an account!!!!!? <a asp-action="Register">Sign up here</a></p>
-                    </div>
+                    
                 </form>
             </div>
         </div>

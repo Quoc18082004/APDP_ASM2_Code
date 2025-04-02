@@ -24,8 +24,11 @@ namespace ASM_SIMS.Models
 
         [Required(ErrorMessage = "Phone is required")]
         [Phone(ErrorMessage = "Invalid phone number")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be 10 digits")]
         public string Phone { get; set; }
 
         public string Address { get; set; }
+
+        public string Role { get; set; } // Thêm trường Role cho dropdown
     }
 }

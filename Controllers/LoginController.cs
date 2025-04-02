@@ -48,7 +48,7 @@ namespace ASM_SIMS.Controllers
             return View(model);
         }
 
-        // GET: Register
+        /*// GET: Register
         [HttpGet]
         public IActionResult Register()
         {
@@ -87,7 +87,7 @@ namespace ASM_SIMS.Controllers
                 return RedirectToAction("Index");
             }
             return View(model);
-        }
+        }*/
 
         // POST: Logout
         [HttpPost]

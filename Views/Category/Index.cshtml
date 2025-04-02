@@ -30,7 +30,7 @@
         <table class="table my-2">
             <thead>
                 <tr>
-                    <th>Id</th>
+                    <th>ID</th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Avatar</th>
@@ -54,8 +54,10 @@
                         <td>@item.CreatedAt</td>
                         @* <td>@item.UpdatedAt</td> *@
                         <td>
-                            <a class="btn btn-info" href="@Url.Action("Edit", "Category", new { id = item.Id })">Edit</a>
-                            <a class="btn btn-danger" href="@Url.Action("Delete", "Category", new { id = item.Id })">Delete</a>
+                            <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 }

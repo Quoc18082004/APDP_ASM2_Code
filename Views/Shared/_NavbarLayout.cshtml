@@ -10,6 +10,7 @@
 	string ActiveStudent = NameConroller == "Student" ? "active" : "";
 	string ActiveClassRoom = NameConroller == "ClassRoom" ? "active" : "";
 	string ActiveCategory = NameConroller == "Category" ? "active" : "";
+	string ActiveRegister = NameConroller == "Register" ? "active" : "";
 
 }
 <nav id="sidebar" class="sidebar js-sidebar">
@@ -50,7 +51,7 @@
 
 			<li class="sidebar-item @ActiveStudent">
 				<a class="sidebar-link" asp-area="" asp-controller="Student" asp-action="Index">
-					<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Students</span>
+					<i class="align-middle" data-feather="user"></i> <span class="align-middle">Students</span>
 				</a>
 			</li>
 
@@ -60,6 +61,11 @@
 				</a>
 			</li>
 
+			<li class="sidebar-item @ActiveRegister">
+				<a class="sidebar-link" asp-area="" asp-controller="Register" asp-action="Index">
+					<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Register</span>
+				</a>
+			</li>
 
 		</ul>
 
