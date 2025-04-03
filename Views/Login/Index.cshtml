@@ -14,6 +14,10 @@
         {
             <p class="text-danger">@ViewData["MessageLogin"]</p>
         }
+        @if (TempData["MessageLogin"] != null)
+        {
+            <p class="text-success">@TempData["MessageLogin"]</p>
+        }
     </div>
 
     <div class="card">
@@ -35,6 +39,12 @@
                     </div>
                     
                 </form>
+                @if (ViewBag.CanCreateFirstAdmin)
+                {
+                    <div class="text-center mt-3">
+                        <p>No accounts exist yet? <a asp-action="CreateFirstAdmin">Create one account</a></p>
+                    </div>
+                }
             </div>
         </div>
     </div>

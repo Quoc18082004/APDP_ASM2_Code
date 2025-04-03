@@ -19,6 +19,8 @@ namespace ASM_SIMS.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            // Kiểm tra xem database có tài khoản nào không
+            ViewBag.CanCreateFirstAdmin = !_dbContext.Accounts.Any();
             return View(new LoginViewModel());
         }
 
@@ -48,32 +50,23 @@ namespace ASM_SIMS.Controllers
             return View(model);
         }
 
-        /*// GET: Register
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View(new RegisterViewModel());
-        }
-
-        // POST: Register
+        // POST: Xử lý tạo tài khoản Admin đầu tiên
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> CreateFirstAdmin(RegisterViewModel model)
         {
+            if (_dbContext.Accounts.Any())
+            {
+                return RedirectToAction("Index"); // Nếu đã có tài khoản, không cho tạo
+            }
+
             if (ModelState.IsValid)
             {
-                // Kiểm tra email hoặc username đã tồn tại chưa
-                if (await _dbContext.Accounts.AnyAsync(a => a.Email == model.Email || a.Username == model.Username))
-                {
-                    ModelState.AddModelError("", "Email or Username already exists");
-                    return View(model);
-                }
-
                 var account = new Account
                 {
-                    RoleId = 1, // Giả định RoleId = 1 là user thường, có thể thay đổi sau
+                    RoleId = 1, // Admin
                     Username = model.Username,
-                    Password = model.Password, // Lưu ý: Nên mã hóa mật khẩu trong thực tế
+                    Password = model.Password,
                     Email = model.Email,
                     Phone = model.Phone,
                     Address = model.Address,
@@ -83,11 +76,11 @@ namespace ASM_SIMS.Controllers
                 _dbContext.Accounts.Add(account);
                 await _dbContext.SaveChangesAsync();
 
-                TempData["MessageRegister"] = "Registration successful! Please sign in.";
+                TempData["MessageLogin"] = "Admin account created successfully! Please sign in.";
                 return RedirectToAction("Index");
             }
             return View(model);
-        }*/
+        }
 
         // POST: Logout
         [HttpPost]
