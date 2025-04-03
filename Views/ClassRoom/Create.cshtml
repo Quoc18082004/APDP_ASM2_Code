@@ -9,11 +9,11 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-12">
-        <h2>Thêm lớp học</h2>
-        <a class="btn btn-info" href="@Url.Action("Index", "ClassRoom")">Quay lại danh sách lớp học</a>
+        <h2>Add Class</h2>
+        <a class="btn btn-info" href="@Url.Action("Index", "ClassRoom")">Back</a>
         <div class="card mt-3">
             <div class="card-body">
-                <h5 class="card-title">Thêm lớp học</h5>
+                <h5 class="card-title">Add Class Room</h5>
                 <div class="mb-3">
                     @if (!ViewData.ModelState.IsValid)
                     {
@@ -27,13 +27,13 @@
                 </div>
                 <form method="post" asp-controller="ClassRoom" asp-action="Create">
                     <div class="mb-3">
-                        <label asp-for="ClassName">Tên lớp</label>
+                        <label asp-for="ClassName">Class Name</label>
                         <input asp-for="ClassName" class="form-control" type="text" />
                         <span asp-validation-for="ClassName" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="CourseId">Khóa học</label>
+                        <label asp-for="CourseId">Course</label>
                         <select asp-for="CourseId" class="form-control" asp-items="@(new SelectList(courses, "Id", "NameCourse"))">
                             <option value="">Chọn khóa học</option>
                         </select>
@@ -41,41 +41,41 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="TeacherId">Giảng viên</label>
+                        <label asp-for="TeacherId">Teacher</label>
                         <select asp-for="TeacherId" class="form-control" asp-items="@(new SelectList(teachers, "Id", "FullName"))">
-                            <option value="">Chọn giảng viên</option>
+                            <option value="">Select Student</option>
                         </select>
                         <span asp-validation-for="TeacherId" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="StartDate">Ngày bắt đầu</label>
+                        <label asp-for="StartDate">Start Date</label>
                         <input asp-for="StartDate" class="form-control" type="date" />
                         <span asp-validation-for="StartDate" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="EndDate">Ngày kết thúc</label>
+                        <label asp-for="EndDate">End Date</label>
                         <input asp-for="EndDate" class="form-control" type="date" />
                         <span asp-validation-for="EndDate" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Schedule">Lịch học</label>
+                        <label asp-for="Schedule">Class schedule</label>
                         <input asp-for="Schedule" class="form-control" type="text" placeholder="Ví dụ: Thứ 2, 8:00-10:00" />
                         <span asp-validation-for="Schedule" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Location">Địa điểm</label>
+                        <label asp-for="Location">Address</label>
                         <input asp-for="Location" class="form-control" type="text" />
                         <span asp-validation-for="Location" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Status">Trạng thái</label>
+                        <label asp-for="Status">Status</label>
                         <select asp-for="Status" class="form-control">
-                            <option value="">Chọn trạng thái</option>
+                            <option value="">Select Status</option>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
@@ -83,7 +83,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <button type="submit" class="btn btn-primary">Thêm</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </form>
             </div>

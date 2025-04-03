@@ -6,32 +6,32 @@ namespace ASM_SIMS.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Tên lớp là bắt buộc")]
-        [StringLength(60, ErrorMessage = "Tên lớp không được dài quá 60 ký tự")]
+        [Required(ErrorMessage = "Class name is required")]
+        [StringLength(60, ErrorMessage = "Class names cannot be longer than 60 characters.")]
         public string ClassName { get; set; }
 
-        [Required(ErrorMessage = "Khóa học là bắt buộc")]
+        [Required(ErrorMessage = "The course is mandatory")]
         public int CourseId { get; set; }
 
-        [Required(ErrorMessage = "Giảng viên là bắt buộc")]
+        [Required(ErrorMessage = "Lecturer is required")]
         public int TeacherId { get; set; }
 
-        [Required(ErrorMessage = "Ngày bắt đầu là bắt buộc")]
+        [Required(ErrorMessage = "Start date is required")]
         public DateOnly StartDate { get; set; }
 
-        [Required(ErrorMessage = "Ngày kết thúc là bắt buộc")]
+        [Required(ErrorMessage = "End date is required")]
         [CustomValidation(typeof(ClassRoomViewModel), nameof(ValidateEndDate))]
         public DateOnly EndDate { get; set; }
 
-        [Required(ErrorMessage = "Lịch học là bắt buộc")]
-        [StringLength(100, ErrorMessage = "Lịch học không được dài quá 100 ký tự")]
+        [Required(ErrorMessage = "Class schedule is mandatory")]
+        [StringLength(100, ErrorMessage = "Class schedule cannot be longer than 100 characters")]
         public string Schedule { get; set; } 
 
-        [StringLength(100, ErrorMessage = "Địa điểm không được dài quá 100 ký tự")]
+        [StringLength(100, ErrorMessage = "Location must not be longer than 100 characters")]
         public string? Location { get; set; }
 
-        [Required(ErrorMessage = "Trạng thái là bắt buộc")]
-        [StringLength(20, ErrorMessage = "Trạng thái không được dài quá 20 ký tự")]
+        [Required(ErrorMessage = "Status is required")]
+        //[StringLength(20, ErrorMessage = "Status cannot be longer than 20 characters")]
         public string Status { get; set; }
 
         public DateTime? CreatedAt { get; set; }
@@ -42,7 +42,7 @@ namespace ASM_SIMS.Models
             var instance = (ClassRoomViewModel)context.ObjectInstance;
             if (endDate < instance.StartDate)
             {
-                return new ValidationResult("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu");
+                return new ValidationResult("End date must be greater than or equal to start date");
             }
             return ValidationResult.Success;
         }

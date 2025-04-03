@@ -6,8 +6,8 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-12">
-        <h2>Sửa giảng viên</h2>
-        <a class="btn btn-info" asp-action="Index">Quay lại</a>
+        <h2>Edit Teacher</h2>
+        <a class="btn btn-info" asp-action="Index">Back</a>
 
         <div class="card mt-3">
             <div class="card-body">
@@ -41,15 +41,16 @@
 
                     <div class="mb-3">
                         <label asp-for="CourseId" class="form-label">Course</label>
-                        <select asp-for="CourseId" class="form-control" asp-items="ViewBag.Courses"></select>
+                        <select asp-for="CourseId" class="form-control" asp-items="@(new SelectList(ViewBag.Courses, "Id", "NameCourse", Model.CourseId))">
+                            <option value="">-- choose teaching subjects --</option>
+                        </select>
                         <span asp-validation-for="CourseId" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="Status" class="form-label">Status</label>
-                        <select asp-for="Status" class="form-control">
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
+                        <select asp-for="Status" class="form-control" asp-items="@(new SelectList(new[] { "Active", "Inactive" }, Model.Status))">
+                            <option value="">-- choose status --</option>
                         </select>
                         <span asp-validation-for="Status" class="text-danger"></span>
                     </div>

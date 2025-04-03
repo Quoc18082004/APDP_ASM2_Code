@@ -104,14 +104,8 @@ namespace ASM_SIMS.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var teacher = _dbContext.Teachers
-                .Include(t => t.Account)
-                .FirstOrDefault(t => t.Id == id && t.DeletedAt == null);
-
-            if (teacher == null)
-            {
-                return NotFound();
-            }
+            var teacher = _dbContext.Teachers.Find(id);
+            if (teacher == null || teacher.DeletedAt != null) return NotFound();
 
             var model = new TeacherViewModel
             {
@@ -120,16 +114,35 @@ namespace ASM_SIMS.Controllers
                 Email = teacher.Email,
                 Phone = teacher.Phone,
                 Address = teacher.Address,
-                Status = teacher.Status
+                Status = teacher.Status,
+                CourseId = teacher.CourseId
             };
+            ViewBag.Courses = _dbContext.Courses.ToList(); // Truyền List<Courses> thay vì SelectList
             return View(model);
         }
 
-        // Xử lý sửa giảng viên
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(TeacherViewModel model)
         {
+            // Kiểm tra trùng lặp email, bỏ qua bản ghi hiện tại
+            var existingEmail = _dbContext.Teachers
+                .Any(t => t.Email == model.Email && t.Id != model.Id && t.DeletedAt == null);
+
+            if (existingEmail)
+            {
+                ModelState.AddModelError("Email", "Email đã tồn tại.");
+            }
+
+            // Kiểm tra trùng lặp số điện thoại, bỏ qua bản ghi hiện tại
+            var existingPhone = _dbContext.Teachers
+                .Any(t => t.Phone == model.Phone && t.Id != model.Id && t.DeletedAt == null);
+
+            if (existingPhone)
+            {
+                ModelState.AddModelError("Phone", "Số điện thoại đã tồn tại.");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -147,6 +160,7 @@ namespace ASM_SIMS.Controllers
                     teacher.Phone = model.Phone;
                     teacher.Address = model.Address;
                     teacher.Status = model.Status;
+                    teacher.CourseId = model.CourseId;
                     teacher.UpdatedAt = DateTime.Now;
 
                     _dbContext.Teachers.Update(teacher);
@@ -160,6 +174,7 @@ namespace ASM_SIMS.Controllers
                     ModelState.AddModelError("", $"Lỗi khi sửa giảng viên: {ex.Message} | Inner: {ex.InnerException?.Message}");
                 }
             }
+            ViewBag.Courses = _dbContext.Courses.ToList(); // Truyền List<Courses> thay vì SelectList
             return View(model);
         }
 

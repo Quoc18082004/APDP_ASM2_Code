@@ -10,39 +10,39 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-12">
-        <h2>Danh sách lớp học</h2>
-        <a class="btn btn-primary" asp-action="Create">Thêm lớp học</a>
+        <h2>Class List</h2>
+        <a class="btn btn-primary" asp-action="Create">Add Class</a>
 
         @if (TempData["save"] != null)
         {
             if (statusSave)
             {
-                <div class="text-success my-2">Thao tác thành công</div>
+                <div class="text-success my-2">Operation successful</div>
             }
             else
             {
-                <div class="text-danger my-2">Thao tác thất bại</div>
+                <div class="text-danger my-2">Operation fail</div>
             }
         }
 
         @if (!Model.Any())
         {
-            <p class="text-info my-2">Chưa có lớp học nào.</p>
+            <p class="text-info my-2">There are no classes yet.</p>
         }
 
         <table class="table my-2">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Tên lớp</th>
-                    <th>Khóa học</th>
-                    <th>Giảng viên</th>
-                    <th>Ngày bắt đầu</th>
-                    <th>Ngày kết thúc</th>
-                    <th>Lịch học</th> 
-                    <th>Địa điểm</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
+                    <th>Class Name</th>
+                    <th>Course</th>
+                    <th>Teacher</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Schedule</th>
+                    <th>Address</th>
+                    <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -61,9 +61,9 @@
                         <td>@item.Location</td>
                         <td>@item.Status</td>
                         <td>
-                            <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Sửa</a>
+                            <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                             <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-danger">Xóa</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </td>
                     </tr>

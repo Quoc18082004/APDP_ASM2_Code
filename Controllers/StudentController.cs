@@ -14,17 +14,13 @@ namespace ASM_SIMS.Controllers
             _dbContext = dbContext;
         }
 
-        // Hiển thị danh sách sinh viên
+        // Display the list of students
         public IActionResult Index()
         {
-
-
-            // kiem tra session
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
             {
                 return RedirectToAction("Index", "Login");
             }
-
 
             var students = _dbContext.Students
                 .Where(s => s.DeletedAt == null)
@@ -50,7 +46,7 @@ namespace ASM_SIMS.Controllers
             return View(students);
         }
 
-        // Hiển thị form thêm sinh viên
+        // Display the form to add a student
         [HttpGet]
         public IActionResult Create()
         {
@@ -59,33 +55,52 @@ namespace ASM_SIMS.Controllers
             return View(new StudentViewModel());
         }
 
-        // Xử lý thêm sinh viên
+        // Handle adding a student
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(StudentViewModel model)
         {
             if (ModelState.IsValid)
             {
+                // Check for duplicates in FullName, Email, Phone
+                if (_dbContext.Students.Any(s => s.FullName == model.FullName && s.DeletedAt == null))
+                {
+                    ModelState.AddModelError("FullName", "Student name already exists.");
+                }
+                if (_dbContext.Students.Any(s => s.Email == model.Email && s.DeletedAt == null))
+                {
+                    ModelState.AddModelError("Email", "Email already exists.");
+                }
+                if (_dbContext.Students.Any(s => s.Phone == model.Phone && s.DeletedAt == null))
+                {
+                    ModelState.AddModelError("Phone", "Phone number already exists.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.ClassRooms = _dbContext.ClassRooms.ToList();
+                    ViewBag.Courses = _dbContext.Courses.ToList();
+                    return View(model);
+                }
+
                 try
                 {
-                    // Tạo Account mới cho sinh viên
                     var account = new Account
                     {
-                        RoleId = 1, // Giả định RoleId = 1 (Student), thay đổi nếu cần
-                        Username = model.Email.Split('@')[0], // Tạo username từ email
-                        Password = "defaultPassword123", // Mật khẩu mặc định, nên mã hóa trong thực tế
+                        RoleId = 1,
+                        Username = model.Email.Split('@')[0],
+                        Password = "defaultPassword123",
                         Email = model.Email,
                         Phone = model.Phone,
-                        Address = model.Address ?? "", // Gán Address hoặc chuỗi rỗng nếu null
+                        Address = model.Address ?? "",
                         CreatedAt = DateTime.Now
                     };
                     _dbContext.Accounts.Add(account);
-                    _dbContext.SaveChanges(); // Lưu Account để lấy Id
+                    _dbContext.SaveChanges();
 
-                    // Tạo Student với AccountId vừa tạo
                     var student = new Student
                     {
-                        AccountId = account.Id, // Sử dụng Id của Account mới
+                        AccountId = account.Id,
                         FullName = model.FullName,
                         Email = model.Email,
                         Phone = model.Phone,
@@ -103,7 +118,7 @@ namespace ASM_SIMS.Controllers
                 catch (Exception ex)
                 {
                     TempData["save"] = false;
-                    ModelState.AddModelError("", $"Lỗi khi thêm sinh viên: {ex.Message} | Inner: {ex.InnerException?.Message}");
+                    ModelState.AddModelError("", $"Error adding student: {ex.Message} | Inner: {ex.InnerException?.Message}");
                 }
             }
             ViewBag.ClassRooms = _dbContext.ClassRooms.ToList();
@@ -111,7 +126,7 @@ namespace ASM_SIMS.Controllers
             return View(model);
         }
 
-        // Hiển thị form sửa sinh viên
+        // Display the form to edit a student
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -141,13 +156,34 @@ namespace ASM_SIMS.Controllers
             return View(model);
         }
 
-        // Xử lý sửa sinh viên
+        // Handle editing a student
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(StudentViewModel model)
         {
             if (ModelState.IsValid)
             {
+                // Check for duplicates in FullName, Email, Phone (excluding the current record)
+                if (_dbContext.Students.Any(s => s.FullName == model.FullName && s.Id != model.Id && s.DeletedAt == null))
+                {
+                    ModelState.AddModelError("FullName", "Student name already exists.");
+                }
+                if (_dbContext.Students.Any(s => s.Email == model.Email && s.Id != model.Id && s.DeletedAt == null))
+                {
+                    ModelState.AddModelError("Email", "Email already exists.");
+                }
+                if (_dbContext.Students.Any(s => s.Phone == model.Phone && s.Id != model.Id && s.DeletedAt == null))
+                {
+                    ModelState.AddModelError("Phone", "Phone number already exists.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.ClassRooms = _dbContext.ClassRooms.ToList();
+                    ViewBag.Courses = _dbContext.Courses.ToList();
+                    return View(model);
+                }
+
                 try
                 {
                     var student = _dbContext.Students
@@ -175,7 +211,7 @@ namespace ASM_SIMS.Controllers
                 catch (Exception ex)
                 {
                     TempData["save"] = false;
-                    ModelState.AddModelError("", $"Lỗi khi sửa sinh viên: {ex.Message} | Inner: {ex.InnerException?.Message}");
+                    ModelState.AddModelError("", $"Error editing student: {ex.Message} | Inner: {ex.InnerException?.Message}");
                 }
             }
             ViewBag.ClassRooms = _dbContext.ClassRooms.ToList();
@@ -183,7 +219,7 @@ namespace ASM_SIMS.Controllers
             return View(model);
         }
 
-        // Xử lý xóa sinh viên (xóa mềm)
+        // Handle deleting a student (soft delete)
         [HttpPost]
         public IActionResult Delete(int id)
         {
@@ -199,14 +235,14 @@ namespace ASM_SIMS.Controllers
             {
                 student.DeletedAt = DateTime.Now;
                 student.Status = "Deleted";
-                _dbContext.Students.Remove(student);
+                _dbContext.Students.Update(student); // Changed from Remove to Update for soft delete
                 _dbContext.SaveChanges();
                 TempData["save"] = true;
             }
             catch (Exception ex)
             {
                 TempData["save"] = false;
-                ModelState.AddModelError("", $"Lỗi khi xóa sinh viên: {ex.Message}");
+                ModelState.AddModelError("", $"Error deleting student: {ex.Message}");
             }
             return RedirectToAction(nameof(Index));
         }

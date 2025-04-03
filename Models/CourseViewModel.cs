@@ -11,14 +11,14 @@ namespace ASM_SIMS.Models
     public class CourseDetail
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "Tên khóa học là bắt buộc")]
+        [Required(ErrorMessage = "Course name is required")]
         public string NameCourse { get; set; }
         public string Description { get; set; }
-        [Required(ErrorMessage = "Danh mục là bắt buộc")]
+        [Required(ErrorMessage = "Category is required")]
         public int CategoryId { get; set; }
-        [Required(ErrorMessage = "Ngày bắt đầu là bắt buộc")]
+        [Required(ErrorMessage = "Start date is required")]
         public DateOnly StartDate { get; set; }
-        [Required(ErrorMessage = "Ngày kết thúc là bắt buộc")]
+        [Required(ErrorMessage = "End date is required")]
         [CustomValidation(typeof(CourseDetail), nameof(ValidateEndDate))] // Sửa thành CourseDetail
         public DateOnly EndDate { get; set; }
 
@@ -26,7 +26,7 @@ namespace ASM_SIMS.Models
         [AllowedTypeFile(new string[] { ".jpg", ".png", ".jpeg", ".gif" })]
         public IFormFile? AvatarCourseFile { get; set; }
         public string? AvatarCourse { get; set; }
-        [Range(0, 5, ErrorMessage = "Đánh giá phải từ 0 đến 5")]
+        [Range(0, 5, ErrorMessage = "Rating must be from 0 to 5")]
         public int Vote { get; set; }
         public bool Status { get; set; }
         public DateTime? CreatedAt { get; set; }
@@ -37,7 +37,7 @@ namespace ASM_SIMS.Models
             var instance = (CourseDetail)context.ObjectInstance; // Ép kiểu thành CourseDetail
             if (endDate < instance.StartDate)
             {
-                return new ValidationResult("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu");
+                return new ValidationResult("End date must be greater than or equal to start date");
             }
             return ValidationResult.Success;
         }
