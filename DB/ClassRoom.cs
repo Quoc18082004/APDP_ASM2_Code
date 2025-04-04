@@ -40,7 +40,7 @@ namespace ASM_SIMS.DB
             // Quan hệ điều hướng
             public Courses Course { get; set; } = null!; // Khởi tạo để tránh CS8618
             public Teacher Teacher { get; set; } = null!; // Khởi tạo để tránh CS8618
-        
+            public virtual ICollection<Student> Students { get; set; } = new List<Student>();
     }
 }
 

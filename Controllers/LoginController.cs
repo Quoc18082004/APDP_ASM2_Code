@@ -12,17 +12,18 @@ namespace ASM_SIMS.Controllers
         // DIP: Tiêm SimsDataContext qua constructor
         public LoginController(SimsDataContext dbContext)
         {
-            _dbContext = dbContext;
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
         // GET: Login
         [HttpGet]
         public IActionResult Index()
         {
-            // Kiểm tra xem database có tài khoản nào không
-            ViewBag.CanCreateFirstAdmin = !_dbContext.Accounts.Any();
+            //// Kiểm tra xem database có tài khoản nào không
+            //ViewBag.CanCreateFirstAdmin = !_dbContext.Accounts.Any();
             return View(new LoginViewModel());
         }
+
 
         // POST: Login
         [HttpPost]
@@ -48,6 +49,17 @@ namespace ASM_SIMS.Controllers
                 }
             }
             return View(model);
+        }
+
+        /*// GET: Hiển thị form tạo tài khoản Admin đầu tiên
+        [HttpGet]
+        public IActionResult CreateFirstAdmin()
+        {
+            if (_dbContext.Accounts.Any())
+            {
+                return RedirectToAction("Index"); // Nếu đã có tài khoản, không cho tạo nữa
+            }
+            return View(new RegisterViewModel());
         }
 
         // POST: Xử lý tạo tài khoản Admin đầu tiên
@@ -80,7 +92,7 @@ namespace ASM_SIMS.Controllers
                 return RedirectToAction("Index");
             }
             return View(model);
-        }
+        }*/
 
         // POST: Logout
         [HttpPost]

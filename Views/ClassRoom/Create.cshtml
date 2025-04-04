@@ -14,17 +14,7 @@
         <div class="card mt-3">
             <div class="card-body">
                 <h5 class="card-title">Add Class Room</h5>
-                <div class="mb-3">
-                    @if (!ViewData.ModelState.IsValid)
-                    {
-                        <div class="text-danger">
-                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                            {
-                                <p>@error.ErrorMessage</p>
-                            }
-                        </div>
-                    }
-                </div>
+                
                 <form method="post" asp-controller="ClassRoom" asp-action="Create">
                     <div class="mb-3">
                         <label asp-for="ClassName">Class Name</label>
@@ -35,7 +25,7 @@
                     <div class="mb-3">
                         <label asp-for="CourseId">Course</label>
                         <select asp-for="CourseId" class="form-control" asp-items="@(new SelectList(courses, "Id", "NameCourse"))">
-                            <option value="">Chọn khóa học</option>
+                            <option value="">Select Course</option>
                         </select>
                         <span asp-validation-for="CourseId" class="text-danger"></span>
                     </div>
@@ -50,19 +40,19 @@
 
                     <div class="mb-3">
                         <label asp-for="StartDate">Start Date</label>
-                        <input asp-for="StartDate" class="form-control" type="date" />
+                        <input asp-for="StartDate" class="form-control" type="date" value="@DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd")" />
                         <span asp-validation-for="StartDate" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="EndDate">End Date</label>
-                        <input asp-for="EndDate" class="form-control" type="date" />
+                        <input asp-for="EndDate" class="form-control" type="date" value="@DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd")" />
                         <span asp-validation-for="EndDate" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="Schedule">Class schedule</label>
-                        <input asp-for="Schedule" class="form-control" type="text" placeholder="Ví dụ: Thứ 2, 8:00-10:00" />
+                        <input asp-for="Schedule" class="form-control" type="text" placeholder="Example: Monday, 8:00 AM - 10:00 AM" />
                         <span asp-validation-for="Schedule" class="text-danger"></span>
                     </div>
 

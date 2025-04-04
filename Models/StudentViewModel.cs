@@ -24,10 +24,15 @@ namespace ASM_SIMS.Models
 
         public int? CourseId { get; set; }
 
+
+
         [Required(ErrorMessage = "Status is required")]
         public string Status { get; set; }
 
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public bool IsSelected { get; set; }
+
+
     }
 }

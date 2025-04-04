@@ -1,7 +1,9 @@
 ﻿@model ASM_SIMS.Models.TeacherViewModel
+@using ASM_SIMS.DB
 @{
     ViewData["Title"] = "Edit Teacher";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
+    var courses = ViewBag.Courses as List<Courses>; // Ép kiểu ViewBag.Courses thành List<Courses>
 }
 
 <div class="row">
@@ -12,7 +14,7 @@
         <div class="card mt-3">
             <div class="card-body">
                 <form method="post" asp-action="Edit">
-                    <input type="hidden" asp-for="Id" /> <!-- Giữ Id để xác định bản ghi cần sửa -->
+                    <input type="hidden" asp-for="Id" />
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <div class="mb-3">

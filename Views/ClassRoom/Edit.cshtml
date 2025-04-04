@@ -48,12 +48,12 @@
                     </div>
                     <div class="mb-3">
                         <label asp-for="StartDate">Start Date</label>
-                        <input asp-for="StartDate" class="form-control" type="date" />
+                        <input asp-for="StartDate" class="form-control" type="date" value="@Model.StartDate.ToString("yyyy-MM-dd")" />
                         <span asp-validation-for="StartDate" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="EndDate">End Date</label>
-                        <input asp-for="EndDate" class="form-control" type="date" />
+                        <input asp-for="EndDate" class="form-control" type="date" value="@Model.EndDate.ToString("yyyy-MM-dd")" />
                         <span asp-validation-for="EndDate" class="text-danger"></span>
                     </div>
                     <div class="mb-3">

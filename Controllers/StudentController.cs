@@ -235,7 +235,7 @@ namespace ASM_SIMS.Controllers
             {
                 student.DeletedAt = DateTime.Now;
                 student.Status = "Deleted";
-                _dbContext.Students.Update(student); // Changed from Remove to Update for soft delete
+                _dbContext.Students.Remove(student);
                 _dbContext.SaveChanges();
                 TempData["save"] = true;
             }

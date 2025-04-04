@@ -1,11 +1,12 @@
 using ASM_SIMS.DB;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ASM_SIMS
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,13 @@ namespace ASM_SIMS
 
             var app = builder.Build();
 
+            // Kh?i t?o tài kho?n m?c ??nh
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<SimsDataContext>();
+                await SeedDefaultAdmin(dbContext);
+            }
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -53,6 +61,34 @@ namespace ASM_SIMS
                 pattern: "{controller=Login}/{action=Index}/{id?}"); // khi ch?y d? án thì s? ch?y login ??u tiên 
 
             app.Run();
+        }
+        private static async Task SeedDefaultAdmin(SimsDataContext dbContext)
+        {
+            // Ki?m tra xem có tài kho?n nào trong database không
+            if (!dbContext.Accounts.Any())
+            {
+                var defaultAdmin = new Account
+                {
+                    RoleId = 1, // Admin
+                    Username = "admin",
+                    Password = "admin123", // Nên mã hóa trong th?c t?
+                    Email = "admin@sims.com",
+                    Phone = "1234567890",
+                    Address = "Default Admin Address",
+                    CreatedAt = DateTime.Now
+                };
+
+                dbContext.Accounts.Add(defaultAdmin);
+                try
+                {
+                    await dbContext.SaveChangesAsync();
+                    Console.WriteLine("Default Admin account created successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error creating default admin: {ex.Message}");
+                }
+            }
         }
     }
 }

@@ -34,7 +34,6 @@
                     <th>Phone Number</th>
                     <th>Address</th>
                     <th>Class</th>
-                    <th>Course</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -50,8 +49,8 @@
                         <td>@item.Email</td>
                         <td>@item.Phone</td>
                         <td>@item.Address</td>
-                        <td>@(classRoom?.ClassName ?? "Chưa gán")</td>
-                        <td>@(course?.NameCourse ?? "Chưa gán")</td>
+                        <td>@(classRoom?.ClassName ?? "Not assigned yet")</td>
+                        <td>@(course?.NameCourse ?? "Not assigned yet")</td>
                         <td>@item.Status</td>
                         <td>
                             <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Edit</a>

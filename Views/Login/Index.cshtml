@@ -10,6 +10,7 @@
     <div class="col-md-6 col-lg-5">
         <h1 class="h2">Welcome back!</h1>
         <p class="lead">Sign in to your account to continue</p>
+        <p class="text-muted">Default Admin: Email: admin@sims.com | Password: admin123</p>
         @if (ViewData["MessageLogin"] != null)
         {
             <p class="text-danger">@ViewData["MessageLogin"]</p>
@@ -37,14 +38,7 @@
                     <div class="d-grid gap-2 mt-3">
                         <button type="submit" class="btn btn-lg btn-primary">Sign in</button>
                     </div>
-                    
                 </form>
-                @if (ViewBag.CanCreateFirstAdmin)
-                {
-                    <div class="text-center mt-3">
-                        <p>No accounts exist yet? <a asp-action="CreateFirstAdmin">Create one account</a></p>
-                    </div>
-                }
             </div>
         </div>
     </div>

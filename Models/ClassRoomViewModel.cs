@@ -11,10 +11,10 @@ namespace ASM_SIMS.Models
         public string ClassName { get; set; }
 
         [Required(ErrorMessage = "The course is mandatory")]
-        public int CourseId { get; set; }
+        public int? CourseId { get; set; }
 
         [Required(ErrorMessage = "Lecturer is required")]
-        public int TeacherId { get; set; }
+        public int? TeacherId { get; set; }
 
         [Required(ErrorMessage = "Start date is required")]
         public DateOnly StartDate { get; set; }

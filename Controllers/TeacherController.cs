@@ -49,7 +49,7 @@ namespace ASM_SIMS.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.Courses = new SelectList(_dbContext.Courses, "Id", "NameCourse"); // Load danh sách khóa học
+            ViewBag.Courses = new SelectList(_dbContext.Courses, "Id", "NameCourse");
             return View(new TeacherViewModel());
         }
 
@@ -57,6 +57,24 @@ namespace ASM_SIMS.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(TeacherViewModel model)
         {
+            // Kiểm tra trùng lặp email
+            var existingEmail = _dbContext.Teachers
+                .Any(t => t.Email == model.Email && t.DeletedAt == null);
+
+            if (existingEmail)
+            {
+                ModelState.AddModelError("Email", "Email đã tồn tại.");
+            }
+
+            // Kiểm tra trùng lặp số điện thoại
+            var existingPhone = _dbContext.Teachers
+                .Any(t => t.Phone == model.Phone && t.DeletedAt == null);
+
+            if (existingPhone)
+            {
+                ModelState.AddModelError("Phone", "Số điện thoại đã tồn tại.");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -81,9 +99,9 @@ namespace ASM_SIMS.Controllers
                         Email = model.Email,
                         Phone = model.Phone,
                         Address = model.Address,
-                        CourseId = model.CourseId, // Gán CourseId từ form
+                        CourseId = model.CourseId,
                         Status = model.Status,
-                        CreatedAt = DateTime.Now
+                        CreatedAt = DateTime.Now,
                     };
                     _dbContext.Teachers.Add(teacher);
                     _dbContext.SaveChanges();
@@ -96,7 +114,7 @@ namespace ASM_SIMS.Controllers
                     ModelState.AddModelError("", $"Lỗi khi thêm giảng viên: {ex.Message} | Inner: {ex.InnerException?.Message}");
                 }
             }
-            ViewBag.Courses = new SelectList(_dbContext.Courses, "Id", "NameCourse"); // Load lại nếu lỗi
+            ViewBag.Courses = new SelectList(_dbContext.Courses, "Id", "NameCourse");
             return View(model);
         }
 

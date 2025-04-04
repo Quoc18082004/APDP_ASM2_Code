@@ -6,7 +6,6 @@ namespace ASM_SIMS.DB
 {
     public class Courses
     {
-
         [AllowNull]
         public DateTime? CreatedAt { get; set; }
         [Key]
@@ -27,8 +26,6 @@ namespace ASM_SIMS.DB
         [Column("EndDate"), Required]
         public DateOnly EndDate { get; set; }
 
-        [Column("AvatarCourse", TypeName = "Varchar(150)"), AllowNull]
-        public string? AvatarCourse { get; set; }
 
         [Column("Vote", TypeName = "Integer"), Required]
         public int Vote { get; set; }
@@ -43,6 +40,9 @@ namespace ASM_SIMS.DB
         public DateTime? DeletedAt { get; set; }
         // Thuộc tính điều hướng cần có
         public Categories Category { get; set; } // Đảm bảo có dòng này
+
+
+
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Data;
 
 
 namespace ASM_SIMS.DB
@@ -38,6 +39,8 @@ namespace ASM_SIMS.DB
 
         [AllowNull]
         public DateTime? DeletedAt { get; set; }
+   
+        public List<Student> Students { get; set; } = new List<Student>();
 
     }
 }

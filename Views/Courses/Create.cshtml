@@ -27,16 +27,16 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="CategoryId">Category</label>
-                        <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "Id", "NameCategory"))">
+                        <label asp-for="CategoryName">Category</label>
+                        <select asp-for="CategoryName" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "NameCategory", "NameCategory"))">
                             <option value="">-- Select Category --</option>
                         </select>
-                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        <span asp-validation-for="CategoryName" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="StartDate">Start Date</label>
-                        <input asp-for="StartDate" class="form-control" type="date" />
+                        <input asp-for="StartDate" class="form-control" type="date" value="@DateOnly.FromDateTime(DateTime.Now).ToString("yyyy-MM-dd")" />
                         <span asp-validation-for="StartDate" class="text-danger"></span>
                     </div>
 
@@ -44,12 +44,6 @@
                         <label asp-for="EndDate">End Date</label>
                         <input asp-for="EndDate" class="form-control" type="date" />
                         <span asp-validation-for="EndDate" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="AvatarCourse">Avatar</label>
-                        <input asp-for="AvatarCourse" class="form-control" type="file" name="ViewAvatar" />
-                        <span asp-validation-for="AvatarCourse" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
