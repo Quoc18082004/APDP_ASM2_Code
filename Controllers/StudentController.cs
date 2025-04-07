@@ -221,6 +221,7 @@ namespace ASM_SIMS.Controllers
         public IActionResult Delete(int id)
         {
             var student = _dbContext.Students
+                .Include(s => s.Account)
                 .FirstOrDefault(s => s.Id == id && s.DeletedAt == null);
 
             if (student == null)
@@ -230,18 +231,21 @@ namespace ASM_SIMS.Controllers
 
             try
             {
-                student.DeletedAt = DateTime.Now;
-                student.Status = "Deleted";
-                _dbContext.Students.Update(student);
+                if (student.Account != null)
+                {
+                    _dbContext.Accounts.Remove(student.Account);
+                }
+                _dbContext.Students.Remove(student);
                 _dbContext.SaveChanges();
                 TempData["save"] = true;
             }
             catch (Exception ex)
             {
                 TempData["save"] = false;
-                ModelState.AddModelError("", $"Error deleting student: {ex.Message}");
+                ModelState.AddModelError("", $"Error deleting student: {ex.Message} | Inner: {ex.InnerException?.Message}");
             }
             return RedirectToAction(nameof(Index));
         }
+
     }
 }
