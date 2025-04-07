@@ -1,65 +1,67 @@
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model ASM_SIMS.Models.CourseViewModel
+@model List<ASM_SIMS.Models.StudentViewModel>
+@using ASM_SIMS.DB
 @{
-    ViewData["title"] = "Courses";
+    ViewData["Title"] = "Students";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
-    bool statusSave = Convert.ToBoolean(TempData["save"]);
+    bool statusSave = TempData["save"] != null && Convert.ToBoolean(TempData["save"]);
+    var classRooms = ViewBag.ClassRooms as List<ClassRoom>;
+    var courses = ViewBag.Courses as List<Courses>;
 }
+
 <div class="row">
     <div class="col-sm-12 col-md-12">
-        <h2>This is Courses Page</h2>
-        <a class="btn btn-primary" href="@Url.Action("Create", "Courses")">Add Course</a>
+        <h2>List Students</h2>
+        <a class="btn btn-primary" asp-action="Create">Add Student</a>
+
         @if (TempData["save"] != null)
         {
-            @if (statusSave)
+            if (statusSave)
             {
-                <div class="text-success">
-                    Create Course Success
+                <div class="alert alert-success my-2" role="alert">
+                    Operation successful!
                 </div>
             }
             else
             {
-                <div class="text-danger my-2">
-                    Create Course Fail
+                <div class="alert alert-danger my-2" role="alert">
+                    Operation failed!
                 </div>
             }
         }
 
-        <table class="table my-2">
-            <thead>
+        <table class="table table-bordered my-2">
+            <thead class="thead-light">
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Category Name</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-
-                    <th>Vote</th>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th>Class</th>
+                    <th>Course</th>
                     <th>Status</th>
-                    <th>Created At</th>
-                    <th>Actions</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.courseList)
+                @foreach (var item in Model)
                 {
+                    var classRoom = classRooms?.FirstOrDefault(c => c.Id == item.ClassRoomId);
+                    var course = courses?.FirstOrDefault(c => c.Id == item.CourseId);
                     <tr>
                         <td>@item.Id</td>
-                        <td>@item.NameCourse</td>
-                        <td>@item.Description</td>
-                        <td>@item.CategoryName</td>
-                        <td>@item.StartDate.ToString("yyyy-MM-dd")</td>
-                        <td>@item.EndDate.ToString("yyyy-MM-dd")</td>
-
-                        <td>@item.Vote</td>
+                        <td>@item.FullName</td>
+                        <td>@item.Email</td>
+                        <td>@item.Phone</td>
+                        <td>@item.Address</td>
+                        <td>@(classRoom?.ClassName ?? "Not assigned yet")</td>
+                        <td>@(course?.NameCourse ?? "Not assigned yet")</td>
                         <td>@item.Status</td>
-                        <td>@item.CreatedAt</td>
                         <td>
-                            <a class="btn btn-info" href="@Url.Action("Edit", "Courses", new { id = item.Id })">Edit</a>
-                            <a class="btn btn-danger" href="@Url.Action("Delete", "Courses", new { id = item.Id })">Delete</a>
+                            <a class="btn btn-info btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this student?');">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 }
