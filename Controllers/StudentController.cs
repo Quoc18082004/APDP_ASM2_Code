@@ -83,7 +83,7 @@ namespace ASM_SIMS.Controllers
 
                 if (emailExists)
                 {
-                    ModelState.AddModelError("Email", "Email đã tồn tại.");
+                    ModelState.AddModelError("Email", "Email already exists.");
                 }
 
                 bool phoneExists = _dbContext.Students.Any(s =>
@@ -93,7 +93,7 @@ namespace ASM_SIMS.Controllers
 
                 if (phoneExists)
                 {
-                    ModelState.AddModelError("Phone", "Số điện thoại đã tồn tại.");
+                    ModelState.AddModelError("Phone", "Phone number already exists.");
                 }
 
                 if (!ModelState.IsValid)
@@ -191,7 +191,7 @@ namespace ASM_SIMS.Controllers
 
                 if (emailExists)
                 {
-                    ModelState.AddModelError("Email", "Email đã tồn tại.");
+                    ModelState.AddModelError("Email", "Email already exists.");
                 }
 
                 bool phoneExists = _dbContext.Students.Any(s =>
@@ -201,7 +201,7 @@ namespace ASM_SIMS.Controllers
 
                 if (phoneExists)
                 {
-                    ModelState.AddModelError("Phone", "Số điện thoại đã tồn tại.");
+                    ModelState.AddModelError("Phone", "Phone number already exists.");
                 }
 
                 if (!ModelState.IsValid)
@@ -247,7 +247,7 @@ namespace ASM_SIMS.Controllers
                 catch (Exception ex)
                 {
                     TempData["save"] = false;
-                    ModelState.AddModelError("", $"Lỗi khi cập nhật sinh viên: {ex.Message} | Inner: {ex.InnerException?.Message}");
+                    ModelState.AddModelError("", $"Error while updating student: {ex.Message} | Inner: {ex.InnerException?.Message}");
                 }
 
             }
