@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using ASM_SIMS.Validations;
 
 namespace ASM_SIMS.Models
 {
@@ -24,7 +25,11 @@ namespace ASM_SIMS.Models
 
         public int? CourseId { get; set; }
 
+        [AllowedSizeFile(3 * 1024 * 1024)]
+        [AllowedTypeFile(new string[] { ".jpg", ".png", ".jpeg", ".gif" })]
+        public IFormFile? ViewAvatar { get; set; }
 
+        public string? Avatar { get; set; }
 
         [Required(ErrorMessage = "Status is required")]
         public string Status { get; set; }
@@ -33,6 +38,6 @@ namespace ASM_SIMS.Models
         public DateTime? UpdatedAt { get; set; }
         public bool IsSelected { get; set; }
 
-
+        public bool IsEdit { get; set; }
     }
 }
