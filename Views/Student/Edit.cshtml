@@ -1,4 +1,4 @@
-﻿@model ASM_SIMS.Models.StudentViewModel
+@model ASM_SIMS.Models.StudentViewModel
 @using ASM_SIMS.DB
 @{
     ViewData["Title"] = "Edit Student";
@@ -13,8 +13,10 @@
         <a class="btn btn-info" asp-action="Index">Back</a>
         <div class="card mt-3">
             <div class="card-body">
-                <form method="post" asp-action="Edit">
+                <form method="post" asp-action="Edit" enctype="multipart/form-data">
+                    <!-- Thêm enctype -->
                     <input type="hidden" asp-for="Id" />
+
                     @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()) || (TempData["save"] != null && !(bool)TempData["save"]))
                     {
                         <div class="text-danger">
@@ -31,6 +33,7 @@
                             }
                         </div>
                     }
+
                     <div class="mb-3">
                         <label asp-for="FullName">Full Name</label>
                         <input asp-for="FullName" class="form-control" />
@@ -73,6 +76,24 @@
                             <option value="Inactive">Inactive</option>
                         </select>
                         <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label>Current Avatar</label>
+                        <div>
+                            @if (!string.IsNullOrEmpty(Model.Avatar))
+                            {
+                                <img src="@Model.Avatar" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <span>No Avatar</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Upload New Avatar (Optional)</label>
+                        <input type="file" asp-for="ViewAvatar" class="form-control" />
+                        <span asp-validation-for="ViewAvatar" class="text-danger"></span>
                     </div>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </form>
